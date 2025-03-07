@@ -12,9 +12,9 @@
     <img src="../assets/0_UVG1F-0kLAEWAT3k.png" alt="" class="algorithmsimg" />
   </div>
   <div class="cards">
-    <app-cards></app-cards>
-    <app-cards></app-cards>
-    <app-cards></app-cards>
-    <app-cards></app-cards>
+    <app-cards
+      *ngFor="let items of infoService.cardInfo"
+      [data]="items"
+    ></app-cards>
   </div>
 </div>
