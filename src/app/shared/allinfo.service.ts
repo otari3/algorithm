@@ -6,9 +6,10 @@ import { Injectable } from '@angular/core';
 export class AllinfoService {
   cardInfo: { title: string; img: string; moreinfo: string; url: string }[] = [
     {
-      title: 'binery search',
+      title: 'Binery Search',
       img: '../../assets/BinarySearch.png',
-      moreinfo: 'this is binery search',
+      moreinfo:
+        'Binary search is an efficient algorithm for finding a target value in a sorted array. It works by repeatedly dividing the search range in half:',
       url: 'dummyurl',
     },
   ];
