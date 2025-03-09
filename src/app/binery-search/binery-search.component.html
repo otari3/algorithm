@@ -1,1 +1,11 @@
-<app-array-node></app-array-node>
+<div class="arrayNodes">
+  <div class="settings">
+    <button (click)="start()">Start</button>
+  </div>
+  <div class="inside">
+    <app-array-node
+      *ngFor="let items of arrayNodes"
+      [data]="items"
+    ></app-array-node>
+  </div>
+</div>
