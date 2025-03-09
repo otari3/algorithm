@@ -9,22 +9,45 @@ import { HelperFucntionsService } from '../shared/helper-fucntions.service';
 export class BinerySearchComponent {
   constructor(private helperfn: HelperFucntionsService) {}
   lightBlue: string = 'rgb(102, 102, 240)';
-  target: number = 14;
-  deley: number = 400;
+  target: number = 37;
+  deley: number = 620;
   arrayNodes: { element: number; color: string }[] = [];
+  targetInfo: { element: number; color: string } = {
+    element: this.target,
+    color: '',
+  };
   isStarted: boolean = false;
 
   async start() {
     if (this.isStarted) {
       return;
     }
+    this.targetInfo.color = '';
     this.isStarted = true;
     this.arrayNodes = [];
-    for (let i = 1; i <= 20; i++) {
-      this.arrayNodes.push({ element: i, color: this.lightBlue });
-    }
+    this.setValues();
     await this.binerySearch();
     this.isStarted = false;
+  }
+
+  setValues() {
+    let smallValues = Math.floor(Math.random() * 19) + 1;
+    let bigValues = 19 - smallValues;
+    this.arrayNodes.push({ element: this.target, color: 'rgb(102, 102, 240)' });
+    let valuesSkiped = 0;
+    for (let i = 0; i < smallValues; i++) {
+      let newNumber = Math.floor(Math.random() * this.target) + 1;
+      if (newNumber === this.target) {
+        valuesSkiped++;
+        continue;
+      }
+      this.arrayNodes.push({ element: newNumber, color: 'rgb(102, 102, 240)' });
+    }
+    for (let i = 0; i < bigValues + valuesSkiped; i++) {
+      let newNumber = Math.floor(Math.random() * 20) + this.target + 1;
+      this.arrayNodes.push({ element: newNumber, color: 'rgb(102, 102, 240)' });
+    }
+    this.arrayNodes.sort((a, b) => a.element - b.element);
   }
 
   removeRight(middle: number, start: number) {
@@ -53,6 +76,7 @@ export class BinerySearchComponent {
         this.removeRight(middle, r);
         this.removeLeft(middle, l);
         this.arrayNodes[middle].color = 'green';
+        this.targetInfo.color = 'green';
         return middle;
       } else if (this.arrayNodes[middle].element > this.target) {
         this.removeRight(middle, r);

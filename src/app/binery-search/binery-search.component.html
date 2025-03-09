@@ -1,6 +1,9 @@
 <div class="arrayNodes">
   <div class="settings">
     <button (click)="start()">Start</button>
+    <div class="singleNode">
+      <app-array-node [data]="targetInfo"></app-array-node>
+    </div>
   </div>
   <div class="inside">
     <app-array-node
