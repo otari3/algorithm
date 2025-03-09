@@ -9,7 +9,7 @@ import { HelperFucntionsService } from '../shared/helper-fucntions.service';
 export class BinerySearchComponent {
   constructor(private helperfn: HelperFucntionsService) {}
   lightBlue: string = 'rgb(102, 102, 240)';
-  target: number = 37;
+  target: number = 38;
   deley: number = 620;
   arrayNodes: { element: number; color: string }[] = [];
   targetInfo: { element: number; color: string } = {
@@ -34,16 +34,16 @@ export class BinerySearchComponent {
     let smallValues = Math.floor(Math.random() * 19) + 1;
     let bigValues = 19 - smallValues;
     this.arrayNodes.push({ element: this.target, color: 'rgb(102, 102, 240)' });
-    let valuesSkiped = 0;
+    let sameValuesSkiped = 0;
     for (let i = 0; i < smallValues; i++) {
       let newNumber = Math.floor(Math.random() * this.target) + 1;
       if (newNumber === this.target) {
-        valuesSkiped++;
+        sameValuesSkiped++;
         continue;
       }
       this.arrayNodes.push({ element: newNumber, color: 'rgb(102, 102, 240)' });
     }
-    for (let i = 0; i < bigValues + valuesSkiped; i++) {
+    for (let i = 0; i < bigValues + sameValuesSkiped; i++) {
       let newNumber = Math.floor(Math.random() * 20) + this.target + 1;
       this.arrayNodes.push({ element: newNumber, color: 'rgb(102, 102, 240)' });
     }
