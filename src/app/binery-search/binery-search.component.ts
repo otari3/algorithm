@@ -55,7 +55,6 @@ export class BinerySearchComponent {
       this.arrayNodes[start].color = '';
       start--;
     }
-    console.log(middle);
   }
   removeLeft(middle: number, start: number) {
     while (start <= middle) {
