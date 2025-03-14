@@ -10,9 +10,15 @@ export class LinkedListNodeComponent {
     x: number;
     y: number;
     val: number;
+    width: number;
+    height: number;
+    nodePx: number;
   } = {
     x: 0,
     y: 0,
     val: 0,
+    width: 0,
+    height: 0,
+    nodePx: 0,
   };
 }

@@ -1,7 +1,15 @@
-<div class="circle">
-  <app-list-lines [arrows]="arrowsToVis"></app-list-lines>
-  <app-linked-list-node
-    *ngFor="let items of nodesToVis; let i = index"
-    [node]="items"
-  ></app-linked-list-node>
+<div class="main">
+  <div class="circle">
+    <app-list-lines [arrows]="arrowsToVis"></app-list-lines>
+    <app-linked-list-node
+      *ngFor="let items of nodesToVis; let i = index"
+      [node]="items"
+    ></app-linked-list-node>
+  </div>
+  <div class="noneCircleNodes">
+    <app-linked-list-node
+      *ngFor="let items of frontNodes"
+      [node]="items"
+    ></app-linked-list-node>
+  </div>
 </div>
