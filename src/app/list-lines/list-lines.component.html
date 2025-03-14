@@ -1,0 +1,25 @@
+<svg class="arrows">
+  <defs>
+    <marker
+      id="arrowhead"
+      markerWidth="10"
+      markerHeight="7"
+      refX="10"
+      refY="3.5"
+      orient="auto"
+    >
+      <polygon points="0 0, 10 3.5, 0 7" fill="black" />
+    </marker>
+  </defs>
+
+  <line
+    *ngFor="let arrow of arrows"
+    [attr.x1]="arrow.x1 + 250"
+    [attr.y1]="arrow.y1 + 250"
+    [attr.x2]="arrow.x2 + 250"
+    [attr.y2]="arrow.y2 + 250"
+    stroke="black"
+    stroke-width="2"
+    marker-end="url(#arrowhead)"
+  />
+</svg>

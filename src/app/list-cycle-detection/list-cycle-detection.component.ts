@@ -15,16 +15,13 @@ export class ListCycleDetectionComponent implements OnInit {
 
   nodes: number[] = [1, 2, 3, 4, 5, 6, 7];
 
-  ngOnInit(): void {
-    const width = 500;
-    const height = 500;
+  calcPositonOfNodes(width: number, height: number) {
     const radius = Math.min(width, height) / 2 - 50;
 
     const angleStep = (2 * Math.PI) / this.nodes.length;
 
     this.nodesToVis = this.nodes.map((_, i) => {
       const angle = -Math.PI + i * angleStep;
-      const nextIndex = (i + 1) % this.nodes.length; // Loop back to 0 after last node
 
       return {
         x: Math.cos(angle) * radius,
@@ -32,15 +29,35 @@ export class ListCycleDetectionComponent implements OnInit {
         val: this.nodes[i],
       };
     });
-
-    for (let i = 0; i < this.nodesToVis.length - 1; i++) {
+  }
+  calPositonOfArrows(
+    nodesPostions: {
+      x: number;
+      y: number;
+      val: number;
+    }[]
+  ) {
+    let n = nodesPostions.length;
+    for (let i = 0; i < n - 1; i++) {
       let arrows = {
-        x1: this.nodesToVis[i].x,
-        y1: this.nodesToVis[i].y,
-        x2: this.nodesToVis[i + 1].x,
-        y2: this.nodesToVis[i + 1].y,
+        x1: nodesPostions[i].x,
+        y1: nodesPostions[i].y,
+        x2: nodesPostions[i + 1].x,
+        y2: nodesPostions[i + 1].y,
       };
       this.arrowsToVis.push(arrows);
     }
+
+    this.arrowsToVis.push({
+      x1: nodesPostions[n - 1].x,
+      y1: nodesPostions[n - 1].y,
+      x2: nodesPostions[0].x,
+      y2: nodesPostions[0].y,
+    });
+  }
+
+  ngOnInit(): void {
+    this.calcPositonOfNodes(500, 500);
+    this.calPositonOfArrows(this.nodesToVis);
   }
 }

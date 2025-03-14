@@ -8,11 +8,3 @@
   justify-content: center;
   align-items: center;
 }
-.arrows {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 500px;
-  height: 500px;
-  pointer-events: none; // Keeps the arrows from blocking node clicks
-}

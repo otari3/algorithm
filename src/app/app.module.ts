@@ -9,6 +9,7 @@ import { BinerySearchComponent } from './binery-search/binery-search.component';
 import { ArrayNodeComponent } from './array-node/array-node.component';
 import { LinkedListNodeComponent } from './linked-list-node/linked-list-node.component';
 import { ListCycleDetectionComponent } from './list-cycle-detection/list-cycle-detection.component';
+import { ListLinesComponent } from './list-lines/list-lines.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ListCycleDetectionComponent } from './list-cycle-detection/list-cycle-d
     BinerySearchComponent,
     ArrayNodeComponent,
     LinkedListNodeComponent,
-    ListCycleDetectionComponent
+    ListCycleDetectionComponent,
+    ListLinesComponent
   ],
   imports: [
     BrowserModule,

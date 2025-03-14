@@ -1,7 +1,7 @@
 <div class="circle">
+  <app-list-lines [arrows]="arrowsToVis"></app-list-lines>
   <app-linked-list-node
     *ngFor="let items of nodesToVis; let i = index"
     [node]="items"
-    [arrow]="arrowsToVis[i]"
   ></app-linked-list-node>
 </div>
