@@ -7,6 +7,8 @@ import { CardsComponent } from './cards/cards.component';
 import { HeaderComponent } from './header/header.component';
 import { BinerySearchComponent } from './binery-search/binery-search.component';
 import { ArrayNodeComponent } from './array-node/array-node.component';
+import { LinkedListNodeComponent } from './linked-list-node/linked-list-node.component';
+import { ListCycleDetectionComponent } from './list-cycle-detection/list-cycle-detection.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +16,9 @@ import { ArrayNodeComponent } from './array-node/array-node.component';
     CardsComponent,
     HeaderComponent,
     BinerySearchComponent,
-    ArrayNodeComponent
+    ArrayNodeComponent,
+    LinkedListNodeComponent,
+    ListCycleDetectionComponent
   ],
   imports: [
     BrowserModule,
