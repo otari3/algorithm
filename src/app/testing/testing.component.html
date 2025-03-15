@@ -1,1 +1,16 @@
-<p>testing works!</p>
+<div class="main">
+  <div class="starightLinkedList">
+    <app-list-lines
+      [width]="800"
+      [height]="height"
+      [arrows]="arrows"
+    ></app-list-lines>
+    <app-linked-list-node
+      *ngFor="let items of nodes; let i = index"
+      [node]="items"
+    ></app-linked-list-node>
+  </div>
+  <div>
+    <h1 id="myDiv">Null</h1>
+  </div>
+</div>

@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Nodes } from '../shared/types';
 
 @Component({
   selector: 'app-linked-list-node',
@@ -6,14 +7,7 @@ import { Component, Input } from '@angular/core';
   styleUrl: './linked-list-node.component.scss',
 })
 export class LinkedListNodeComponent {
-  @Input() node: {
-    x: number;
-    y: number;
-    val: number;
-    width: number;
-    height: number;
-    nodePx: number;
-  } = {
+  @Input() node: Nodes = {
     x: 0,
     y: 0,
     val: 0,

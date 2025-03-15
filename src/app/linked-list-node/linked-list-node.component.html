@@ -1,8 +1,8 @@
 <div
   class="node"
   [ngStyle]="{
-    top: node.y + (node.height / 2 - 20) + 'px',
-    left: node.x + (node.width / 2 - 20) + 'px'
+    top: node.y + (node.height / 2 - node.nodePx) + 'px',
+    left: node.x + (node.width / 2 - node.nodePx) + 'px'
   }"
 >
   <p class="number">{{ node.val }}</p>

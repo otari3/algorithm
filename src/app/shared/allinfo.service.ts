@@ -19,6 +19,13 @@ export class AllinfoService {
         'Binary search is an efficient algorithm for finding a target value in a sorted array. It works by repeatedly dividing the search range in half:',
       url: 'listcycle',
     },
+    {
+      title: 'test',
+      img: '../../assets/BinarySearch.png',
+      moreinfo:
+        'Binary search is an efficient algorithm for finding a target value in a sorted array. It works by repeatedly dividing the search range in half:',
+      url: 'test',
+    },
   ];
   constructor() {}
 }

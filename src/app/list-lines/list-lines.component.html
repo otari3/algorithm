@@ -1,4 +1,4 @@
-<svg class="arrows">
+<svg class="arrows" [attr.width]="width" [attr.height]="height">
   <line
     *ngFor="let arrow of arrows"
     [attr.x1]="arrow.x1 + arrow.width / 2"

@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Arrows } from '../shared/types';
 
 @Component({
   selector: 'app-list-lines',
@@ -6,12 +7,7 @@ import { Component, Input } from '@angular/core';
   styleUrl: './list-lines.component.scss',
 })
 export class ListLinesComponent {
-  @Input() arrows: {
-    x1: number;
-    y1: number;
-    x2: number;
-    y2: number;
-    width: number;
-    height: number;
-  }[] = [];
+  @Input() arrows: Arrows[] = [];
+  @Input() width: number = 0;
+  @Input() height: number = 0;
 }
