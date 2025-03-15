@@ -1,12 +1,8 @@
 <div
   class="node"
   [ngStyle]="{
-    transform:
-      'translate(' +
-      (node.x + (node.width / 2 - 20)) +
-      'px, ' +
-      (node.y + (node.height / 2 - 20)) +
-      'px)'
+    top: node.y + (node.height / 2 - 20) + 'px',
+    left: node.x + (node.width / 2 - 20) + 'px'
   }"
 >
   <p class="number">{{ node.val }}</p>

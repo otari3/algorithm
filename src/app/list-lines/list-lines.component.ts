@@ -12,5 +12,6 @@ export class ListLinesComponent {
     x2: number;
     y2: number;
     width: number;
+    height: number;
   }[] = [];
 }

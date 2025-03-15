@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Arrows, Nodes } from '../shared/types';
 
 @Component({
   selector: 'app-list-cycle-detection',
@@ -8,31 +9,13 @@ import { Component, OnInit } from '@angular/core';
 export class ListCycleDetectionComponent implements OnInit {
   width: number = 500;
   height: number = 500;
-  nodesToVis: {
-    x: number;
-    y: number;
-    val: number;
-    width: number;
-    height: number;
-    nodePx: number;
-  }[] = [];
+  nodesToVis: Nodes[] = [];
 
-  frontNodes: {
-    x: number;
-    y: number;
-    val: number;
-    width: number;
-    height: number;
-    nodePx: number;
-  }[] = [];
+  frontNodes: Nodes[] = [];
 
-  arrowsToVis: {
-    x1: number;
-    y1: number;
-    x2: number;
-    y2: number;
-    width: number;
-  }[] = [];
+  arrowsToVis: Arrows[] = [];
+
+  straightArrows: Arrows[] = [];
 
   nodes: number[] = [1, 2, 3, 4, 5, 6, 7, 4];
 
@@ -70,13 +53,7 @@ export class ListCycleDetectionComponent implements OnInit {
       };
     });
   }
-  calPositonOfArrows(
-    nodesPostions: {
-      x: number;
-      y: number;
-      val: number;
-    }[]
-  ) {
+  calPositonOfArrows(nodesPostions: Nodes[]) {
     let n = nodesPostions.length;
     for (let i = 0; i < n - 1; i++) {
       let arrows = {
@@ -85,6 +62,7 @@ export class ListCycleDetectionComponent implements OnInit {
         x2: nodesPostions[i + 1].x,
         y2: nodesPostions[i + 1].y,
         width: this.width,
+        height: this.height,
       };
       this.arrowsToVis.push(arrows);
     }
@@ -95,11 +73,38 @@ export class ListCycleDetectionComponent implements OnInit {
       x2: nodesPostions[0].x,
       y2: nodesPostions[0].y,
       width: this.width,
+      height: this.height,
     });
+  }
+
+  calcFrontArrows() {
+    let n = this.frontNodes.length;
+    for (let i = 0; i < this.frontNodes.length - 1; i++) {
+      let arrow = {
+        x1: this.frontNodes[i].x + 250,
+        y1: this.frontNodes[i].y,
+        x2: this.frontNodes[i + 1].x + 250,
+        y2: this.frontNodes[i + 1].y,
+        width: 400,
+        height: 700,
+      };
+
+      this.straightArrows.push(arrow);
+    }
+    this.straightArrows.push({
+      x1: this.frontNodes[n - 1].x + 250,
+      y1: this.frontNodes[n - 1].y,
+      x2: this.frontNodes[0].x + 250,
+      y2: this.frontNodes[0].y,
+      width: 400,
+      height: 700,
+    });
+    console.log(this.straightArrows);
   }
 
   ngOnInit(): void {
     this.calcPositonOfNodes(this.width, this.height);
     this.calPositonOfArrows(this.nodesToVis);
+    this.calcFrontArrows();
   }
 }
