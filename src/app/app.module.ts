@@ -11,6 +11,7 @@ import { LinkedListNodeComponent } from './linked-list-node/linked-list-node.com
 import { ListCycleDetectionComponent } from './list-cycle-detection/list-cycle-detection.component';
 import { ListLinesComponent } from './list-lines/list-lines.component';
 import { TestingComponent } from './testing/testing.component';
+import { GameoflifeComponent } from './game-of-life/gameoflife/gameoflife.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { TestingComponent } from './testing/testing.component';
     LinkedListNodeComponent,
     ListCycleDetectionComponent,
     ListLinesComponent,
-    TestingComponent
+    TestingComponent,
+    GameoflifeComponent
   ],
   imports: [
     BrowserModule,

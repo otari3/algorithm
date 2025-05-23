@@ -13,7 +13,7 @@ export class AllinfoService {
       url: 'binerysearch',
     },
     {
-      title: 'Binery Search',
+      title: 'linked list cycle detection ',
       img: '../../assets/BinarySearch.png',
       moreinfo:
         'Binary search is an efficient algorithm for finding a target value in a sorted array. It works by repeatedly dividing the search range in half:',
@@ -25,6 +25,13 @@ export class AllinfoService {
       moreinfo:
         'Binary search is an efficient algorithm for finding a target value in a sorted array. It works by repeatedly dividing the search range in half:',
       url: 'test',
+    },
+    {
+      title: 'game of life',
+      img: 'https://upload.wikimedia.org/wikipedia/commons/e/ec/Conways_game_of_life_breeder.png',
+      moreinfo:
+        'Binary search is an efficient algorithm for finding a target value in a sorted array. It works by repeatedly dividing the search range in half:',
+      url: 'gameoflife',
     },
   ];
   constructor() {}

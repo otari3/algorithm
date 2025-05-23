@@ -1,0 +1,21 @@
+<main>
+ <div>  
+  <div class="buttons"> 
+    <button (click)="onRandom()">Random</button>
+    <button (click)="onPlay()">{{isPlaying?'Pause':'Play'}}</button>
+    <button (click)="onDraw()">{{canDraw?'u can draw':'draw'}}</button>
+    <button (click)="onClear()">Clear</button>
+    <button (click)="onErase()">erase</button>
+  </div>
+   <div class="rows" *ngFor="let items of matrix; let r = index">
+    <div
+      class="cells"
+      *ngFor="let cells of items; let c = index"
+      [ngStyle]="{ 'background-color': !matrix[r][c] ? 'white' : 'black' }"
+      (mousedown)="onMouseDown(r,c)"
+      (mouseover)="onHover(r,c)"
+      (mouseup)="onMouseUp()"
+    ></div>
+  </div>
+ </div>
+</main>

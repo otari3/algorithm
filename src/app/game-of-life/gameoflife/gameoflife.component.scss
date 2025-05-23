@@ -1,0 +1,18 @@
+main {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  .rows {
+    display: flex;
+    .cells {
+      width: 10px;
+      height: 10px;
+      border: solid 1px rgb(183, 176, 176);
+    }
+  }
+}
+.buttons{ 
+  button{ 
+    cursor: pointer;
+  }
+}
