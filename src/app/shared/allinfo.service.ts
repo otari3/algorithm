@@ -19,6 +19,13 @@ export class AllinfoService {
         "Conway's Game of Life is a cellular automaton where each cell in a grid changes state based on its neighbors. It evolves in steps, using simple rules to create complex patterns over time.",
       url: 'gameoflife',
     },
+     {
+      title: 'BZ reaction',
+      img: 'https://www.researchgate.net/publication/329206646/figure/fig2/AS:697426805534724@1543290916926/A-numerical-simulation-of-BZ-reaction-using-the-Brusselator-model-at-different-time-slice.ppm',
+      moreinfo:
+        "Conway's Game of Life is a cellular automaton where each cell in a grid changes state based on its neighbors. It evolves in steps, using simple rules to create complex patterns over time.",
+      url: 'bzreaction',
+    },
   ];
   constructor() {}
 }

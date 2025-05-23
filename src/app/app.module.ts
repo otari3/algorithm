@@ -12,6 +12,7 @@ import { ListCycleDetectionComponent } from './list-cycle-detection/list-cycle-d
 import { ListLinesComponent } from './list-lines/list-lines.component';
 import { TestingComponent } from './testing/testing.component';
 import { GameoflifeComponent } from './game-of-life/gameoflife/gameoflife.component';
+import { BzreactionComponent } from './bzreaction/bzreaction/bzreaction.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { GameoflifeComponent } from './game-of-life/gameoflife/gameoflife.compon
     ListCycleDetectionComponent,
     ListLinesComponent,
     TestingComponent,
-    GameoflifeComponent
+    GameoflifeComponent,
+    BzreactionComponent
   ],
   imports: [
     BrowserModule,
