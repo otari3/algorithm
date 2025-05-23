@@ -13,24 +13,10 @@ export class AllinfoService {
       url: 'binerysearch',
     },
     {
-      title: 'linked list cycle detection ',
-      img: '../../assets/BinarySearch.png',
-      moreinfo:
-        'Binary search is an efficient algorithm for finding a target value in a sorted array. It works by repeatedly dividing the search range in half:',
-      url: 'listcycle',
-    },
-    {
-      title: 'test',
-      img: '../../assets/BinarySearch.png',
-      moreinfo:
-        'Binary search is an efficient algorithm for finding a target value in a sorted array. It works by repeatedly dividing the search range in half:',
-      url: 'test',
-    },
-    {
       title: 'game of life',
       img: 'https://upload.wikimedia.org/wikipedia/commons/e/ec/Conways_game_of_life_breeder.png',
       moreinfo:
-        'Binary search is an efficient algorithm for finding a target value in a sorted array. It works by repeatedly dividing the search range in half:',
+        "Conway's Game of Life is a cellular automaton where each cell in a grid changes state based on its neighbors. It evolves in steps, using simple rules to create complex patterns over time.",
       url: 'gameoflife',
     },
   ];

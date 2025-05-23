@@ -1,11 +1,11 @@
 <main>
  <div>  
   <div class="buttons"> 
-    <button (click)="onRandom()">Random</button>
-    <button (click)="onPlay()">{{isPlaying?'Pause':'Play'}}</button>
-    <button (click)="onDraw()">{{canDraw?'u can draw':'draw'}}</button>
-    <button (click)="onClear()">Clear</button>
-    <button (click)="onErase()">erase</button>
+    <button (click)="onRandom()" class="random">Random</button>
+    <button (click)="onPlay()" class="play" [ngStyle]="{'background-color':!isPlaying?'rgba(51, 51, 51, 0.05)':'#2C974B'}">{{isPlaying?'Pause':'Play'}}</button>
+    <button (click)="onClear()" class="clear">Clear</button>
+    <button (click)="onDraw()" class="pen" [ngStyle]="{'background-color':!canDraw?'rgba(51, 51, 51, 0.05)':'#0476ff'}"><i class="fa-solid fa-pen"></i></button>
+    <button (click)="onErase()" class="eraser" [ngStyle]="{'background-color':!canErase?'rgba(51, 51, 51, 0.05)':'#0476ff'}"><i class="fa-solid fa-eraser"></i></button>
   </div>
    <div class="rows" *ngFor="let items of matrix; let r = index">
     <div
