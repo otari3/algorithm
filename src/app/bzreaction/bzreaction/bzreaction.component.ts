@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { HelperFucntionsService } from '../../shared/helper-fucntions.service';
 import { RouteConfigLoadEnd } from '@angular/router';
-import * as PIXI from 'pixi.js';
+import * as PIXI from 'pixi.js'
 import { ɵnormalizeQueryParams } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
 
@@ -217,13 +217,15 @@ colorPalette: Record<number, string> = {
 };
 
   matrix: Uint8Array[] = [];
-  gridSize:number = 400;
+  gridSize:number = 300;
    app = new PIXI.Application()
    graphics = new PIXI.Graphics();
    currentlyWorking = false;
    playing!:Subscription
    pixelSize = 2
    q  = 199;
+   worker!:Worker;
+   frames:{newState:Record<string, Uint16Array[]>,newFrame:Uint8Array[]}[] = [];
   generateMatrix(){ 
     for(let r = 0;r<this.gridSize;r++){ 
       let row = new Uint8Array(this.gridSize)
@@ -241,78 +243,33 @@ colorPalette: Record<number, string> = {
       count--;
     }
   }
-  applyRules(r:number,c:number,state:number[][],matrix:Uint8Array[],k1:number,k2:number,g:number,q:number){ 
-     let directons = [[1, 0],[-1, 0],[0, 1],[0, -1],[1, 1],[1, -1],[-1, 1],[-1, -1]];
-     let ill = 0;
-     let infected = 0;
-     let s = matrix[r][c];
-      for(let dir of directons){  
-        let dr = dir[0];
-        let dc = dir[1];
-        if(Math.min(r+dr,c+dc)<0 || r+dr===matrix.length || c+dc===matrix[0].length){ 
-          continue;
-        }
-        if(matrix[r+dr][c+dc]===q){ 
-          ill++;
-        }else if(matrix[r+dr][c+dc]!==0){ 
-          infected++;
-        }
-        s+=matrix[r+dr][c+dc];
-      }
-      if(matrix[r][c]===0){ 
-        let k1State = Math.floor(infected/k1);
-        let k2State = Math.floor(ill/k2);
-        state.push([r,c,Math.min(k1State+k2State,q)]);
-      }else if(matrix[r][c]===q){ 
-        state.push([r,c,0]);
-      }else{  
-        let newState = Math.floor(s/(ill+infected+1))+g;
-        state.push([r,c,Math.min(newState,q)])
-      }
-  }
-generateNextState() {
-  let nextState: number[][] = [];
-  this.currentlyWorking = true;
-  const colorBuckets:Record<string, Uint16Array[]> = {}
-  for (let r = 0; r < this.matrix.length; r++) {
-    for (let c = 0; c < this.matrix[0].length; c++) {
-      this.applyRules(r, c, nextState, this.matrix,2,3,70,this.q);
-    }
-  }
-  
-  for (let state of nextState) {
-    let r = state[0];
-    let c = state[1];
-    let newState = state[2];
-    this.addingColor(colorBuckets,newState,r,c);
-    this.matrix[r][c] = newState;
-  }
-  this.drawChangedCells(colorBuckets);
-}
-  getColor(r:number,c:number){  
-    return this.matrix[r][c];
-  }
+
 
   async startApp(main:any){ 
     await this.app.init({background: '#1099bb', width: this.gridSize * this.pixelSize, height: this.gridSize * this.pixelSize,})
     if(main){ 
        main.appendChild(this.app.canvas as any);
        this.app.stage.addChild(this.graphics);
-       this.drawGrid()
+       this.drawGrid(this.app.stage);
     }
   }
-  drawGrid(){ 
-     for(let r = 0;r<this.matrix.length;r++){ 
-        for(let c = 0;c<this.matrix[0].length;c++){ 
-          let color = this.colorPalette[this.matrix[r][c]];
-          this.graphics.beginFill(color);
-          this.graphics.drawRect(r*this.pixelSize,c*this.pixelSize,this.pixelSize,this.pixelSize);
-          this.graphics.endFill()
-        }
-       }
-       
+  drawGrid(stage: PIXI.Container){ 
+    const canvas = document.createElement('canvas');
+    canvas.width = this.gridSize*this.pixelSize;
+    canvas.height = this.gridSize*this.pixelSize;
+    const ctx = canvas.getContext('2d')!;
+    ctx.fillStyle = "#ff0000";
+    ctx.fillRect(1, 1, 1, 1);
+    for(let r = 0;r<this.matrix.length;r++){  
+      for()
+    }
+    const texture = PIXI.Texture.from(canvas);
+    const sprite = new PIXI.Sprite(texture);
+    stage.addChild(sprite);     
   }
   drawChangedCells(changes: Record<string, Uint16Array[]> ) {
+    this.currentlyWorking = true;
+    this.worker.postMessage({matrix:this.matrix,colorPalette:this.colorPalette,q:this.q})
     this.graphics.clear()
     for(let keys in changes){  
       let le = changes[keys].length;
@@ -366,28 +323,29 @@ generateNextState() {
     (c1[2] - c2[2]) ** 2
   );
 }
-addingColor(hashMap:Record<string, Uint16Array[]>,state:number,r:number,c:number){  
-    let newColor = this.colorPalette[state];
-    if((newColor in hashMap)){  
-      hashMap[newColor].push(new Uint16Array([r,c]))
-    }else{  
-      hashMap[newColor] =  [new Uint16Array([r,c])];
-    }
-}
   ngOnInit(): void {
       this.generateMatrix();
-      this.groupingColors()
+      this.groupingColors();
+      this.worker = new Worker(new URL('./drawing.worker', import.meta.url),  { type: 'module' })
+      this.worker.onmessage = (event: MessageEvent<{newState:Record<string, Uint16Array[]>,newFrame:Uint8Array[]}>) => {
+            this.frames.push({newState:event.data.newState,newFrame:event.data.newFrame});
+      };
   }
   ngAfterViewInit(): void {
      const mainContainer = document.querySelector('main.size');
      if(mainContainer){
       this.startApp(mainContainer);
      }
-     this.playing = interval(100).subscribe(()=>{  
-       if(!this.currentlyWorking){
-        this.generateNextState()
-       }
-      })
+      this.worker.postMessage({matrix:this.matrix,colorPalette:this.colorPalette,q:this.q})
+      // this.playing = interval(100).subscribe(()=>{ 
+      //     if(!this.currentlyWorking && this.frames.length ===1){  
+      //       let nextFrame = this.frames[0].newFrame;
+      //       let nextState = this.frames[0].newState;
+      //       this.frames.pop()
+      //       this.matrix = nextFrame;
+      //       this.drawChangedCells(nextState)
+      //     }
+      // })
   }
   ngOnDestroy(): void {
       if(this.playing){ 
