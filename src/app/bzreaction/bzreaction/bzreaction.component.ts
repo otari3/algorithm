@@ -276,7 +276,7 @@ generateNextState() {
   const colorBuckets:Uint16Array[][] = Array.from({ length: this.q+1 }, () => [])
   for (let r = 0; r < this.matrix.length; r++) {
     for (let c = 0; c < this.matrix[0].length; c++) {
-      this.applyRules(r, c, nextState, this.matrix,2,3,70,this.q);
+      this.applyRules(r, c, nextState, this.matrix,1,2,70,this.q);
     }
   }
   
@@ -327,8 +327,46 @@ generateNextState() {
     }
   this.currentlyWorking = false;
 }
+  hexToRGB(hex:String):[number, number, number]{   
+    const r = parseInt(hex.slice(1,3),16);
+    const g = parseInt(hex.slice(3,5),16);
+    const b = parseInt(hex.slice(5,7),16);
+    return [r,g,b];
+  }
+  rgbToHex(r: number, g: number, b: number): string {
+  return (
+    "#" +
+    r.toString(16).padStart(2, "0") +
+    g.toString(16).padStart(2, "0") +
+    b.toString(16).padStart(2, "0")
+  );
+}
+ groupingColors(){  
+  let currentColor = this.hexToRGB(this.colorPalette[0]);
+  let newColorPalet:Record<number, string> = {}
+  newColorPalet[0] = this.rgbToHex(currentColor[0],currentColor[1],currentColor[2]);
+  for(let i = 1;i<=this.q;i++){ 
+      let newColor = this.hexToRGB(this.colorPalette[i]);
+      let distance = this.colorDistance(currentColor,newColor);
+      if(distance<=10){  
+        newColorPalet[i] = this.rgbToHex(currentColor[0],currentColor[1],currentColor[2]);
+      }else{  
+        newColorPalet[i] = this.rgbToHex(newColor[0],newColor[1],newColor[2]);
+        currentColor = newColor;
+      }
+  }
+  this.colorPalette = newColorPalet;
+ }
+ colorDistance(c1: [number, number, number], c2: [number, number, number]): number {
+  return Math.sqrt(
+    (c1[0] - c2[0]) ** 2 +
+    (c1[1] - c2[1]) ** 2 +
+    (c1[2] - c2[2]) ** 2
+  );
+}
   ngOnInit(): void {
       this.generateMatrix();
+      this.groupingColors()
   }
   ngAfterViewInit(): void {
      const mainContainer = document.querySelector('main.size');
