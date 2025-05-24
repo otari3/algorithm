@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { HelperFucntionsService } from '../../shared/helper-fucntions.service';
 import { RouteConfigLoadEnd } from '@angular/router';
+import * as PIXI from 'pixi.js';
+import { ɵnormalizeQueryParams } from '@angular/common';
 
 @Component({
   selector: 'app-bzreaction',
   templateUrl: './bzreaction.component.html',
   styleUrl: './bzreaction.component.scss'
 })
-export class BzreactionComponent implements OnInit{
+export class BzreactionComponent implements OnInit,AfterViewInit{
 constructor(private helperfn: HelperFucntionsService) {}
 
 colorPalette: Record<number, string> = {
@@ -213,19 +215,18 @@ colorPalette: Record<number, string> = {
   199: '#f23d42',
 };
 
-  matrix:number[][] = [];
-  gridSize:number = 512; 
+  matrix: Uint8Array[] = [];
+  gridSize:number = 512;
+   app = new PIXI.Application()
+   graphics = new PIXI.Graphics();
   generateMatrix(){ 
-    for(let r = 0;r<512;r++){ 
-      let row = []
-      for(let c=0;c<512;c++){ 
-        row.push(0);
-      }
-      this.genrateRandomPatterns(row,512);
+    for(let r = 0;r<this.gridSize;r++){ 
+      let row = new Uint8Array(this.gridSize)
+      this.genrateRandomPatterns(row,this.gridSize);
       this.matrix.push(row);
     }
   }
-  genrateRandomPatterns(row:number[],g:number){  
+  genrateRandomPatterns(row:Uint8Array,g:number){  
     let count = Math.floor(Math.random()*g);
     while(count>=0){  
       let c = Math.floor(Math.random()*g);
@@ -235,7 +236,7 @@ colorPalette: Record<number, string> = {
       count--;
     }
   }
-  applyRules(r:number,c:number,state:number[][],matrix:number[][],k1:number,k2:number,g:number,q:number){ 
+  applyRules(r:number,c:number,state:number[][],matrix:Uint8Array[],k1:number,k2:number,g:number,q:number){ 
      let directons = [[1, 0],[-1, 0],[0, 1],[0, -1],[1, 1],[1, -1],[-1, 1],[-1, -1]];
      let ill = 0;
      let infected = 0;
@@ -268,7 +269,7 @@ generateNextState() {
     let nextState: number[][] = [];
   for (let r = 0; r < this.matrix.length; r++) {
     for (let c = 0; c < this.matrix[0].length; c++) {
-      this.applyRules(r, c, nextState, this.matrix,2,3,70,198);
+      this.applyRules(r, c, nextState, this.matrix,3,3,28,198);
     }
   }
   
@@ -278,11 +279,47 @@ generateNextState() {
     let newState = state[2];
     this.matrix[r][c] = newState;
   }
+  this.drawChangedCells(nextState);
 }
   getColor(r:number,c:number){  
     return this.matrix[r][c];
   }
+
+  async startApp(main:any){ 
+    await this.app.init({background: '#1099bb', width: this.gridSize * 2, height: this.gridSize * 2,})
+    if(main){ 
+       main.appendChild(this.app.canvas as any);
+       this.app.stage.addChild(this.graphics);
+       this.drawGrid()
+    }
+  }
+  drawGrid(){ 
+     for(let r = 0;r<this.matrix.length;r++){ 
+        for(let c = 0;c<this.matrix[0].length;c++){ 
+          let color = this.colorPalette[this.matrix[r][c]];
+          this.graphics.beginFill(color);
+          this.graphics.drawRect(r*2,c*2,2,2);
+          this.graphics.endFill()
+        }
+       }
+       
+  }
+  drawChangedCells(changes: number[][]) {
+    this.graphics.clear()
+  for (let [r, c,s] of changes) {
+    const color = this.colorPalette[this.matrix[r][c]];
+    this.graphics.beginFill(color);
+    this.graphics.drawRect(c * 2, r * 2, 2, 2); // ⚠️ Swapped c/r to match canvas coords
+    this.graphics.endFill();
+  }
+}
   ngOnInit(): void {
       this.generateMatrix();
+  }
+  ngAfterViewInit(): void {
+     const mainContainer = document.querySelector('main.size');
+     if(mainContainer){
+      this.startApp(mainContainer);
+     }
   }
 }

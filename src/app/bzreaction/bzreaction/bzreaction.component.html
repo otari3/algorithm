@@ -1,13 +1,2 @@
-<main>
- <div>  
-  <div class="buttons"> 
-  </div>
-   <div class="rows" *ngFor="let row of matrix; let r = index">
-    <div
-      class="cells"
-      *ngFor="let cols of row; let c = index"
-      [ngStyle]="{'background-color':colorPalette[getColor(r,c)]}"
-    ></div>
-  </div>
- </div>
+<main class="size">
 </main>
