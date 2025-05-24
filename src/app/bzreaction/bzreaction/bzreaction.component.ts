@@ -214,13 +214,14 @@ colorPalette: Record<number, string> = {
 };
 
   matrix:number[][] = [];
+  gridSize:number = 512; 
   generateMatrix(){ 
-    for(let r = 0;r<50;r++){ 
+    for(let r = 0;r<512;r++){ 
       let row = []
-      for(let c=0;c<118;c++){ 
+      for(let c=0;c<512;c++){ 
         row.push(0);
       }
-      this.genrateRandomPatterns(row,118);
+      this.genrateRandomPatterns(row,512);
       this.matrix.push(row);
     }
   }
@@ -267,7 +268,7 @@ generateNextState() {
     let nextState: number[][] = [];
   for (let r = 0; r < this.matrix.length; r++) {
     for (let c = 0; c < this.matrix[0].length; c++) {
-      this.applyRules(r, c, nextState, this.matrix,2,3,70,199);
+      this.applyRules(r, c, nextState, this.matrix,2,3,70,198);
     }
   }
   
@@ -283,8 +284,5 @@ generateNextState() {
   }
   ngOnInit(): void {
       this.generateMatrix();
-      setInterval(()=>{ 
-          this.generateNextState()
-      },100)
   }
 }
