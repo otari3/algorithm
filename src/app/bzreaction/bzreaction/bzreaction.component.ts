@@ -273,10 +273,10 @@ colorPalette: Record<number, string> = {
 generateNextState() {
   let nextState: number[][] = [];
   this.currentlyWorking = true;
-  const colorBuckets:Uint16Array[][] = Array.from({ length: this.q+1 }, () => [])
+  const colorBuckets:Record<string, Uint16Array[]> = {}
   for (let r = 0; r < this.matrix.length; r++) {
     for (let c = 0; c < this.matrix[0].length; c++) {
-      this.applyRules(r, c, nextState, this.matrix,1,2,70,this.q);
+      this.applyRules(r, c, nextState, this.matrix,2,3,70,this.q);
     }
   }
   
@@ -284,7 +284,7 @@ generateNextState() {
     let r = state[0];
     let c = state[1];
     let newState = state[2];
-    colorBuckets[newState].push(new Uint16Array([r,c]));
+    this.addingColor(colorBuckets,newState,r,c);
     this.matrix[r][c] = newState;
   }
   this.drawChangedCells(colorBuckets);
@@ -312,14 +312,16 @@ generateNextState() {
        }
        
   }
-  drawChangedCells(changes: Uint16Array[][]) {
+  drawChangedCells(changes: Record<string, Uint16Array[]> ) {
     this.graphics.clear()
-    for(let i = 0;i<changes.length;i++){  
-      let l = changes[i].length;
-      this.graphics.beginFill(this.colorPalette[i]);
-      for(let j = 0;j<changes[i].length;j++){ 
-        let r = changes[i][j][0];
-        let c = changes[i][j][1];
+    for(let keys in changes){  
+      let le = changes[keys].length;
+      let currColor = keys;
+
+      this.graphics.beginFill(currColor);
+      for(let j = 0;j<le;j++){ 
+        let r = changes[keys][j][0];
+        let c = changes[keys][j][1];
          this.graphics.drawRect(c * this.pixelSize, r * this.pixelSize, this.pixelSize, this.pixelSize);
       }
       this.graphics.endFill();
@@ -348,7 +350,7 @@ generateNextState() {
   for(let i = 1;i<=this.q;i++){ 
       let newColor = this.hexToRGB(this.colorPalette[i]);
       let distance = this.colorDistance(currentColor,newColor);
-      if(distance<=10){  
+      if(distance<=100){  
         newColorPalet[i] = this.rgbToHex(currentColor[0],currentColor[1],currentColor[2]);
       }else{  
         newColorPalet[i] = this.rgbToHex(newColor[0],newColor[1],newColor[2]);
@@ -363,6 +365,14 @@ generateNextState() {
     (c1[1] - c2[1]) ** 2 +
     (c1[2] - c2[2]) ** 2
   );
+}
+addingColor(hashMap:Record<string, Uint16Array[]>,state:number,r:number,c:number){  
+    let newColor = this.colorPalette[state];
+    if((newColor in hashMap)){  
+      hashMap[newColor].push(new Uint16Array([r,c]))
+    }else{  
+      hashMap[newColor] =  [new Uint16Array([r,c])];
+    }
 }
   ngOnInit(): void {
       this.generateMatrix();
