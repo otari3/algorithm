@@ -219,13 +219,17 @@ colorPalette: Record<number, string> = {
   matrix: Uint8Array[] = [];
   gridSize:number = 300;
    app = new PIXI.Application()
-   graphics = new PIXI.Graphics();
    currentlyWorking = false;
    playing!:Subscription
    pixelSize = 2
    q  = 199;
    worker!:Worker;
    frames:{newState:Record<string, Uint16Array[]>,newFrame:Uint8Array[]}[] = [];
+   ctx!:CanvasRenderingContext2D
+   canvas!:HTMLCanvasElement
+   texture!:PIXI.Texture<PIXI.TextureSource<any>>
+   sprite!:PIXI.Sprite;
+   basetTexture!:PIXI.TextureSource<any>
   generateMatrix(){ 
     for(let r = 0;r<this.gridSize;r++){ 
       let row = new Uint8Array(this.gridSize)
@@ -249,41 +253,42 @@ colorPalette: Record<number, string> = {
     await this.app.init({background: '#1099bb', width: this.gridSize * this.pixelSize, height: this.gridSize * this.pixelSize,})
     if(main){ 
        main.appendChild(this.app.canvas as any);
-       this.app.stage.addChild(this.graphics);
        this.drawGrid(this.app.stage);
     }
   }
   drawGrid(stage: PIXI.Container){ 
-    const canvas = document.createElement('canvas');
-    canvas.width = this.gridSize*this.pixelSize;
-    canvas.height = this.gridSize*this.pixelSize;
-    const ctx = canvas.getContext('2d')!;
-    ctx.fillStyle = "#ff0000";
-    ctx.fillRect(1, 1, 1, 1);
+     this.canvas = document.createElement('canvas');
+    this.canvas.width = this.gridSize;
+    this.canvas.height = this.gridSize;
+    this.ctx = this.canvas.getContext('2d')!;
     for(let r = 0;r<this.matrix.length;r++){  
-      for()
+      for(let c=0;c<this.matrix[0].length;c++){ 
+         this.ctx.fillStyle = this.colorPalette[this.matrix[r][c]];
+         this.ctx.fillRect(c, r, 1, 1)
+      }
     }
-    const texture = PIXI.Texture.from(canvas);
-    const sprite = new PIXI.Sprite(texture);
-    stage.addChild(sprite);     
+    this.basetTexture=PIXI.TextureSource.from(this.canvas)
+    this.texture = PIXI.Texture.from(this.basetTexture);
+    this.sprite = new PIXI.Sprite(this.texture);
+    this.sprite.scale.set(this.pixelSize)
+    stage.addChild(this.sprite);     
   }
   drawChangedCells(changes: Record<string, Uint16Array[]> ) {
     this.currentlyWorking = true;
     this.worker.postMessage({matrix:this.matrix,colorPalette:this.colorPalette,q:this.q})
-    this.graphics.clear()
     for(let keys in changes){  
       let le = changes[keys].length;
       let currColor = keys;
-
-      this.graphics.beginFill(currColor);
+      this.ctx.fillStyle = currColor;
       for(let j = 0;j<le;j++){ 
         let r = changes[keys][j][0];
         let c = changes[keys][j][1];
-         this.graphics.drawRect(c * this.pixelSize, r * this.pixelSize, this.pixelSize, this.pixelSize);
+        this.ctx.fillRect(c, r, 1, 1);
       }
-      this.graphics.endFill();
-
     }
+    
+    
+    this.basetTexture.update()
   this.currentlyWorking = false;
 }
   hexToRGB(hex:String):[number, number, number]{   
@@ -337,15 +342,15 @@ colorPalette: Record<number, string> = {
       this.startApp(mainContainer);
      }
       this.worker.postMessage({matrix:this.matrix,colorPalette:this.colorPalette,q:this.q})
-      // this.playing = interval(100).subscribe(()=>{ 
-      //     if(!this.currentlyWorking && this.frames.length ===1){  
-      //       let nextFrame = this.frames[0].newFrame;
-      //       let nextState = this.frames[0].newState;
-      //       this.frames.pop()
-      //       this.matrix = nextFrame;
-      //       this.drawChangedCells(nextState)
-      //     }
-      // })
+       this.playing = interval(100).subscribe(()=>{ 
+           if(!this.currentlyWorking && this.frames.length ===1){  
+             let nextFrame = this.frames[0].newFrame;
+             let nextState = this.frames[0].newState;
+             this.frames.pop()
+             this.matrix = nextFrame;
+             this.drawChangedCells(nextState)
+           }
+       })
   }
   ngOnDestroy(): void {
       if(this.playing){ 
