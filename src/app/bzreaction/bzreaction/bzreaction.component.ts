@@ -217,13 +217,13 @@ colorPalette: Record<number, string> = {
 };
 
   matrix: Uint8Array[] = [];
-  rowSize:number = 528;
-  colSize:number = 528;
+  rowSize:number = 512;
+  colSize:number = 512;
    app = new PIXI.Application()
    currentlyWorking = false;
    playing!:number
-   pixelSize = 1
-   q  = 199;
+   pixelSize = 2
+   q  = 99;
    worker!:Worker;
    frames:{newState:Record<string, Uint16Array[]>,newFrame:Uint8Array[],change:number}[] = [];
    ctx!:CanvasRenderingContext2D
@@ -369,5 +369,6 @@ colorPalette: Record<number, string> = {
       if(this.playing){ 
         cancelAnimationFrame(this.playing);
       }
+      this.worker.terminate();
   }
 }

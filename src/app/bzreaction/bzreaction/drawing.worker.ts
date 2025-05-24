@@ -36,7 +36,7 @@ function generateNextState(matrix:Uint8Array[],q:number){
   let nextState: number[][] = [];
   for (let r = 0; r < matrix.length; r++) {
     for (let c = 0; c < matrix[0].length; c++) {
-      applyRules(r, c, nextState, matrix,2,3,70,q);
+      applyRules(r, c, nextState, matrix,2,3,20,q);
     }
   }
   
