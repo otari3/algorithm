@@ -341,16 +341,16 @@ colorPalette: Record<number, string> = {
      if(mainContainer){
       this.startApp(mainContainer);
      }
-      this.worker.postMessage({matrix:this.matrix,colorPalette:this.colorPalette,q:this.q})
-       this.playing = interval(100).subscribe(()=>{ 
-           if(!this.currentlyWorking && this.frames.length ===1){  
-             let nextFrame = this.frames[0].newFrame;
-             let nextState = this.frames[0].newState;
-             this.frames.pop()
-             this.matrix = nextFrame;
-             this.drawChangedCells(nextState)
-           }
-       })
+      // this.worker.postMessage({matrix:this.matrix,colorPalette:this.colorPalette,q:this.q})
+      //  this.playing = interval(100).subscribe(()=>{ 
+      //      if(!this.currentlyWorking && this.frames.length ===1){  
+      //        let nextFrame = this.frames[0].newFrame;
+      //        let nextState = this.frames[0].newState;
+      //        this.frames.pop()
+      //        this.matrix = nextFrame;
+      //        this.drawChangedCells(nextState)
+      //      }
+      //  })
   }
   ngOnDestroy(): void {
       if(this.playing){ 
