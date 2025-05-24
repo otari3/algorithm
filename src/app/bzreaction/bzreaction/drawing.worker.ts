@@ -32,14 +32,11 @@ function applyRules(r:number,c:number,state:number[][],matrix:Uint8Array[],k1:nu
         state.push([r,c,Math.min(newState,q)])
       }
   }
-
-
-function generateNextState(matrix:Uint8Array[],q:number) {
+function generateNextState(matrix:Uint8Array[],q:number){
   let nextState: number[][] = [];
-  const colorBuckets:Record<string, Uint16Array[]> = {}
   for (let r = 0; r < matrix.length; r++) {
     for (let c = 0; c < matrix[0].length; c++) {
-      applyRules(r, c, nextState, matrix,3,3,28,q);
+      applyRules(r, c, nextState, matrix,2,3,70,q);
     }
   }
   
@@ -49,6 +46,7 @@ function generateNextState(matrix:Uint8Array[],q:number) {
     let newState = state[2];
     matrix[r][c] = newState;
   }
+  
 }
 postMessage({newState:generateNextState(data.matrix,data.q),newFrame:data.matrix},)
 });

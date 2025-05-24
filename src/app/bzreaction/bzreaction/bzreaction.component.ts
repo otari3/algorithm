@@ -217,11 +217,12 @@ colorPalette: Record<number, string> = {
 };
 
   matrix: Uint8Array[] = [];
-  gridSize:number = 512;
+  rowSize:number = 528;
+  colSize:number = 528;
    app = new PIXI.Application()
    currentlyWorking = false;
-   playing!:Subscription
-   pixelSize = 2
+   playing!:number
+   pixelSize = 1
    q  = 199;
    worker!:Worker;
    frames:{newState:Record<string, Uint16Array[]>,newFrame:Uint8Array[],change:number}[] = [];
@@ -231,9 +232,9 @@ colorPalette: Record<number, string> = {
    sprite!:PIXI.Sprite;
    basetTexture!:PIXI.TextureSource<any>
   generateMatrix(){ 
-    for(let r = 0;r<this.gridSize;r++){ 
-      let row = new Uint8Array(this.gridSize)
-      this.genrateRandomPatterns(row,this.gridSize);
+    for(let r = 0;r<this.rowSize;r++){ 
+      let row = new Uint8Array(this.colSize)
+      this.genrateRandomPatterns(row,this.colSize);
       this.matrix.push(row);
     }
   }
@@ -250,7 +251,7 @@ colorPalette: Record<number, string> = {
 
 
   async startApp(main:any){ 
-    await this.app.init({background: '#1099bb', width: this.gridSize * this.pixelSize, height: this.gridSize * this.pixelSize,})
+    await this.app.init({background: '#1099bb', width: this.colSize * this.pixelSize, height: this.rowSize * this.pixelSize,})
     if(main){ 
        main.appendChild(this.app.canvas as any);
        this.drawGrid(this.app.stage);
@@ -258,14 +259,14 @@ colorPalette: Record<number, string> = {
   }
   drawGrid(stage: PIXI.Container){ 
      this.canvas = document.createElement('canvas');
-    this.canvas.width = this.gridSize;
-    this.canvas.height = this.gridSize;
+    this.canvas.width = this.colSize;
+    this.canvas.height = this.rowSize;
     this.ctx = this.canvas.getContext('2d')!;
-    const imgData = this.ctx.createImageData(this.gridSize, this.gridSize);
+    const imgData = this.ctx.createImageData(this.colSize, this.rowSize);
     const data = imgData.data;
     for(let r = 0;r<this.matrix.length;r++){  
       for(let c=0;c<this.matrix[0].length;c++){ 
-        const idx = (r * this.gridSize + c) * 4;
+        const idx = (r * this.colSize + c) * 4;
         const [rVal, gVal, bVal] = this.hexToRGB(this.colorPalette[this.matrix[r][c]])
         data[idx] = rVal;
         data[idx + 1] = gVal;
@@ -283,11 +284,11 @@ colorPalette: Record<number, string> = {
   drawChangedCells() {
     this.currentlyWorking = true;
     this.worker.postMessage({matrix:this.matrix,colorPalette:this.colorPalette,q:this.q})
-      const imgData = this.ctx.createImageData(this.gridSize, this.gridSize);
+      const imgData = this.ctx.createImageData(this.colSize, this.rowSize);
       const data = imgData.data;
       for(let r = 0;r<this.matrix.length;r++){  
         for(let c=0;c<this.matrix[0].length;c++){ 
-          const idx = (r * this.gridSize + c) * 4;
+          const idx = (r * this.colSize + c) * 4;
           const [rVal, gVal, bVal] = this.hexToRGB(this.colorPalette[this.matrix[r][c]])
           data[idx] = rVal;
           data[idx + 1] = gVal;
@@ -356,19 +357,17 @@ colorPalette: Record<number, string> = {
           const loop = () => {
           if (!this.currentlyWorking && this.frames.length === 1) {
             let nextFrame = this.frames[0].newFrame;
-            let nextState = this.frames[0].newState;
-            let change = this.frames[0].change;
             this.frames.pop();
             this.matrix = nextFrame;
             this.drawChangedCells();
       }
-      requestAnimationFrame(loop);
+     this.playing = requestAnimationFrame(loop);
     };
-    requestAnimationFrame(loop);
+     this.playing = requestAnimationFrame(loop);
   }
   ngOnDestroy(): void {
       if(this.playing){ 
-        this.playing.unsubscribe()
+        cancelAnimationFrame(this.playing);
       }
   }
 }
