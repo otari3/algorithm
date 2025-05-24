@@ -1,224 +1,229 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { HelperFucntionsService } from '../../shared/helper-fucntions.service';
 import { RouteConfigLoadEnd } from '@angular/router';
 import * as PIXI from 'pixi.js';
 import { ɵnormalizeQueryParams } from '@angular/common';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-bzreaction',
   templateUrl: './bzreaction.component.html',
   styleUrl: './bzreaction.component.scss'
 })
-export class BzreactionComponent implements OnInit,AfterViewInit{
+export class BzreactionComponent implements OnInit,AfterViewInit,OnDestroy{
 constructor(private helperfn: HelperFucntionsService) {}
 
 colorPalette: Record<number, string> = {
-  0: '#f23d3d',
-  1: '#f2423d',
-  2: '#f2473d',
-  3: '#f24d3d',
-  4: '#f2523d',
-  5: '#f2583d',
-  6: '#f25d3d',
-  7: '#f2633d',
-  8: '#f2683d',
-  9: '#f26e3d',
-  10: '#f2733d',
-  11: '#f2793d',
-  12: '#f27e3d',
-  13: '#f2833d',
-  14: '#f2893d',
-  15: '#f28e3d',
-  16: '#f2943d',
-  17: '#f2993d',
-  18: '#f29f3d',
-  19: '#f2a43d',
-  20: '#f2aa3d',
-  21: '#f2af3d',
-  22: '#f2b43d',
-  23: '#f2ba3d',
-  24: '#f2bf3d',
-  25: '#f2c53d',
-  26: '#f2ca3d',
-  27: '#f2d03d',
-  28: '#f2d53d',
-  29: '#f2db3d',
-  30: '#f2e03d',
-  31: '#f2e63d',
-  32: '#f2eb3d',
-  33: '#f2f03d',
-  34: '#eff23d',
-  35: '#e9f23d',
-  36: '#e4f23d',
-  37: '#def23d',
-  38: '#d9f23d',
-  39: '#d3f23d',
-  40: '#cef23d',
-  41: '#c8f23d',
-  42: '#c3f23d',
-  43: '#bef23d',
-  44: '#b8f23d',
-  45: '#b3f23d',
-  46: '#adf23d',
-  47: '#a8f23d',
-  48: '#a2f23d',
-  49: '#9df23d',
-  50: '#97f23d',
-  51: '#92f23d',
-  52: '#8df23d',
-  53: '#87f23d',
-  54: '#82f23d',
-  55: '#7cf23d',
-  56: '#77f23d',
-  57: '#71f23d',
-  58: '#6cf23d',
-  59: '#66f23d',
-  60: '#61f23d',
-  61: '#5bf23d',
-  62: '#56f23d',
-  63: '#51f23d',
-  64: '#4bf23d',
-  65: '#46f23d',
-  66: '#40f23d',
-  67: '#3df23e',
-  68: '#3df244',
-  69: '#3df249',
-  70: '#3df24f',
-  71: '#3df254',
-  72: '#3df25a',
-  73: '#3df25f',
-  74: '#3df265',
-  75: '#3df26a',
-  76: '#3df26f',
-  77: '#3df275',
-  78: '#3df27a',
-  79: '#3df280',
-  80: '#3df285',
-  81: '#3df28b',
-  82: '#3df290',
-  83: '#3df296',
-  84: '#3df29b',
-  85: '#3df2a0',
-  86: '#3df2a6',
-  87: '#3df2ab',
-  88: '#3df2b1',
-  89: '#3df2b6',
-  90: '#3df2bc',
-  91: '#3df2c1',
-  92: '#3df2c7',
-  93: '#3df2cc',
-  94: '#3df2d2',
-  95: '#3df2d7',
-  96: '#3df2dc',
-  97: '#3df2e2',
-  98: '#3df2e7',
-  99: '#3df2ed',
-  100: '#3df2f2',
-  101: '#3dedf2',
-  102: '#3de7f2',
-  103: '#3de2f2',
-  104: '#3ddcf2',
-  105: '#3dd7f2',
-  106: '#3dd2f2',
-  107: '#3dccf2',
-  108: '#3dc7f2',
-  109: '#3dc1f2',
-  110: '#3dbcf2',
-  111: '#3db6f2',
-  112: '#3db1f2',
-  113: '#3dabf2',
-  114: '#3da6f2',
-  115: '#3da0f2',
-  116: '#3d9bf2',
-  117: '#3d96f2',
-  118: '#3d90f2',
-  119: '#3d8bf2',
-  120: '#3d85f2',
-  121: '#3d80f2',
-  122: '#3d7af2',
-  123: '#3d75f2',
-  124: '#3d6ff2',
-  125: '#3d6af2',
-  126: '#3d65f2',
-  127: '#3d5ff2',
-  128: '#3d5af2',
-  129: '#3d54f2',
-  130: '#3d4ff2',
-  131: '#3d49f2',
-  132: '#3d44f2',
-  133: '#3d3ef2',
-  134: '#403df2',
-  135: '#463df2',
-  136: '#4b3df2',
-  137: '#513df2',
-  138: '#563df2',
-  139: '#5b3df2',
-  140: '#613df2',
-  141: '#663df2',
-  142: '#6c3df2',
-  143: '#713df2',
-  144: '#773df2',
-  145: '#7c3df2',
-  146: '#823df2',
-  147: '#873df2',
-  148: '#8d3df2',
-  149: '#923df2',
-  150: '#973df2',
-  151: '#9d3df2',
-  152: '#a23df2',
-  153: '#a83df2',
-  154: '#ad3df2',
-  155: '#b33df2',
-  156: '#b83df2',
-  157: '#be3df2',
-  158: '#c33df2',
-  159: '#c83df2',
-  160: '#ce3df2',
-  161: '#d33df2',
-  162: '#d93df2',
-  163: '#de3df2',
-  164: '#e43df2',
-  165: '#e93df2',
-  166: '#ef3df2',
-  167: '#f23df0',
-  168: '#f23deb',
-  169: '#f23de6',
-  170: '#f23de0',
-  171: '#f23ddb',
-  172: '#f23dd5',
-  173: '#f23dd0',
-  174: '#f23dca',
-  175: '#f23dc5',
-  176: '#f23dbf',
-  177: '#f23dba',
-  178: '#f23db4',
-  179: '#f23daf',
-  180: '#f23daa',
-  181: '#f23da4',
-  182: '#f23d9f',
-  183: '#f23d99',
-  184: '#f23d94',
-  185: '#f23d8e',
-  186: '#f23d89',
-  187: '#f23d83',
-  188: '#f23d7e',
-  189: '#f23d79',
-  190: '#f23d73',
-  191: '#f23d6e',
-  192: '#f23d68',
-  193: '#f23d63',
-  194: '#f23d5d',
-  195: '#f23d58',
-  196: '#f23d52',
-  197: '#f23d4d',
-  198: '#f23d47',
-  199: '#f23d42',
+  0: "#e62e2e",
+  1: "#e6332e",
+  2: "#e6392e",
+  3: "#e63e2e",
+  4: "#e6442e",
+  5: "#e6492e",
+  6: "#e64f2e",
+  7: "#e6542e",
+  8: "#e65a2e",
+  9: "#e65f2e",
+  10: "#e6652e",
+  11: "#e66a2e",
+  12: "#e6702e",
+  13: "#e6762e",
+  14: "#e67b2e",
+  15: "#e6812e",
+  16: "#e6862e",
+  17: "#e68c2e",
+  18: "#e6912e",
+  19: "#e6972e",
+  20: "#e69c2e",
+  21: "#e6a22e",
+  22: "#e6a72e",
+  23: "#e6ad2e",
+  24: "#e6b22e",
+  25: "#e6b82e",
+  26: "#e6bd2e",
+  27: "#e6c32e",
+  28: "#e6c82e",
+  29: "#e6ce2e",
+  30: "#e6d32e",
+  31: "#e6d92e",
+  32: "#e6de2e",
+  33: "#e6e42e",
+  34: "#e2e62e",
+  35: "#dce62e",
+  36: "#d7e62e",
+  37: "#d1e62e",
+  38: "#cce62e",
+  39: "#c6e62e",
+  40: "#c1e62e",
+  41: "#bbe62e",
+  42: "#b6e62e",
+  43: "#b0e62e",
+  44: "#abe62e",
+  45: "#a5e62e",
+  46: "#a0e62e",
+  47: "#9ae62e",
+  48: "#95e62e",
+  49: "#8fe62e",
+  50: "#8ae62e",
+  51: "#84e62e",
+  52: "#7fe62e",
+  53: "#79e62e",
+  54: "#74e62e",
+  55: "#6ee62e",
+  56: "#69e62e",
+  57: "#63e62e",
+  58: "#5ee62e",
+  59: "#58e62e",
+  60: "#53e62e",
+  61: "#4de62e",
+  62: "#48e62e",
+  63: "#42e62e",
+  64: "#3de62e",
+  65: "#37e62e",
+  66: "#32e62e",
+  67: "#2ee630",
+  68: "#2ee635",
+  69: "#2ee63b",
+  70: "#2ee640",
+  71: "#2ee646",
+  72: "#2ee64b",
+  73: "#2ee651",
+  74: "#2ee656",
+  75: "#2ee65c",
+  76: "#2ee661",
+  77: "#2ee667",
+  78: "#2ee66c",
+  79: "#2ee672",
+  80: "#2ee677",
+  81: "#2ee67d",
+  82: "#2ee682",
+  83: "#2ee688",
+  84: "#2ee68d",
+  85: "#2ee693",
+  86: "#2ee698",
+  87: "#2ee69e",
+  88: "#2ee6a3",
+  89: "#2ee6a9",
+  90: "#2ee6ae",
+  91: "#2ee6b4",
+  92: "#2ee6b9",
+  93: "#2ee6bf",
+  94: "#2ee6c4",
+  95: "#2ee6ca",
+  96: "#2ee6cf",
+  97: "#2ee6d5",
+  98: "#2ee6da",
+  99: "#2ee6e0",
+  100: "#2ee6e6",
+  101: "#2ee0e6",
+  102: "#2edae6",
+  103: "#2ed5e6",
+  104: "#2ecfe6",
+  105: "#2ecae6",
+  106: "#2ec4e6",
+  107: "#2ebfe6",
+  108: "#2eb9e6",
+  109: "#2eb4e6",
+  110: "#2eaee6",
+  111: "#2ea9e6",
+  112: "#2ea3e6",
+  113: "#2e9ee6",
+  114: "#2e98e6",
+  115: "#2e93e6",
+  116: "#2e8de6",
+  117: "#2e88e6",
+  118: "#2e82e6",
+  119: "#2e7de6",
+  120: "#2e77e6",
+  121: "#2e72e6",
+  122: "#2e6ce6",
+  123: "#2e67e6",
+  124: "#2e61e6",
+  125: "#2e5ce6",
+  126: "#2e56e6",
+  127: "#2e51e6",
+  128: "#2e4be6",
+  129: "#2e46e6",
+  130: "#2e40e6",
+  131: "#2e3be6",
+  132: "#2e35e6",
+  133: "#2e30e6",
+  134: "#322ee6",
+  135: "#372ee6",
+  136: "#3d2ee6",
+  137: "#422ee6",
+  138: "#482ee6",
+  139: "#4d2ee6",
+  140: "#532ee6",
+  141: "#582ee6",
+  142: "#5e2ee6",
+  143: "#632ee6",
+  144: "#692ee6",
+  145: "#6e2ee6",
+  146: "#742ee6",
+  147: "#792ee6",
+  148: "#7f2ee6",
+  149: "#842ee6",
+  150: "#8a2ee6",
+  151: "#8f2ee6",
+  152: "#952ee6",
+  153: "#9a2ee6",
+  154: "#a02ee6",
+  155: "#a52ee6",
+  156: "#ab2ee6",
+  157: "#b02ee6",
+  158: "#b62ee6",
+  159: "#bb2ee6",
+  160: "#c12ee6",
+  161: "#c62ee6",
+  162: "#cc2ee6",
+  163: "#d12ee6",
+  164: "#d72ee6",
+  165: "#dc2ee6",
+  166: "#e22ee6",
+  167: "#e62ee4",
+  168: "#e62ede",
+  169: "#e62ed9",
+  170: "#e62ed3",
+  171: "#e62ece",
+  172: "#e62ec8",
+  173: "#e62ec3",
+  174: "#e62ebd",
+  175: "#e62eb8",
+  176: "#e62eb2",
+  177: "#e62ead",
+  178: "#e62ea7",
+  179: "#e62ea2",
+  180: "#e62e9c",
+  181: "#e62e97",
+  182: "#e62e91",
+  183: "#e62e8c",
+  184: "#e62e86",
+  185: "#e62e81",
+  186: "#e62e7b",
+  187: "#e62e76",
+  188: "#e62e70",
+  189: "#e62e6a",
+  190: "#e62e65",
+  191: "#e62e5f",
+  192: "#e62e5a",
+  193: "#e62e54",
+  194: "#e62e4f",
+  195: "#e62e49",
+  196: "#e62e44",
+  197: "#e62e3e",
+  198: "#e62e39",
+  199: "#e62e33",
 };
 
   matrix: Uint8Array[] = [];
-  gridSize:number = 512;
+  gridSize:number = 400;
    app = new PIXI.Application()
    graphics = new PIXI.Graphics();
+   currentlyWorking = false;
+   playing!:Subscription
+   pixelSize = 2
+   q  = 199;
   generateMatrix(){ 
     for(let r = 0;r<this.gridSize;r++){ 
       let row = new Uint8Array(this.gridSize)
@@ -230,7 +235,7 @@ colorPalette: Record<number, string> = {
     let count = Math.floor(Math.random()*g);
     while(count>=0){  
       let c = Math.floor(Math.random()*g);
-      let randomState = Math.floor(Math.random()*199)
+      let randomState = Math.floor(Math.random()*this.q)
       let flip =  Math.floor(Math.random()*2);
       row[c] = randomState;
       count--;
@@ -266,10 +271,12 @@ colorPalette: Record<number, string> = {
       }
   }
 generateNextState() {
-    let nextState: number[][] = [];
+  let nextState: number[][] = [];
+  this.currentlyWorking = true;
+  const colorBuckets:Uint16Array[][] = Array.from({ length: this.q+1 }, () => [])
   for (let r = 0; r < this.matrix.length; r++) {
     for (let c = 0; c < this.matrix[0].length; c++) {
-      this.applyRules(r, c, nextState, this.matrix,3,3,28,198);
+      this.applyRules(r, c, nextState, this.matrix,2,3,70,this.q);
     }
   }
   
@@ -277,16 +284,17 @@ generateNextState() {
     let r = state[0];
     let c = state[1];
     let newState = state[2];
+    colorBuckets[newState].push(new Uint16Array([r,c]));
     this.matrix[r][c] = newState;
   }
-  this.drawChangedCells(nextState);
+  this.drawChangedCells(colorBuckets);
 }
   getColor(r:number,c:number){  
     return this.matrix[r][c];
   }
 
   async startApp(main:any){ 
-    await this.app.init({background: '#1099bb', width: this.gridSize * 2, height: this.gridSize * 2,})
+    await this.app.init({background: '#1099bb', width: this.gridSize * this.pixelSize, height: this.gridSize * this.pixelSize,})
     if(main){ 
        main.appendChild(this.app.canvas as any);
        this.app.stage.addChild(this.graphics);
@@ -298,20 +306,26 @@ generateNextState() {
         for(let c = 0;c<this.matrix[0].length;c++){ 
           let color = this.colorPalette[this.matrix[r][c]];
           this.graphics.beginFill(color);
-          this.graphics.drawRect(r*2,c*2,2,2);
+          this.graphics.drawRect(r*this.pixelSize,c*this.pixelSize,this.pixelSize,this.pixelSize);
           this.graphics.endFill()
         }
        }
        
   }
-  drawChangedCells(changes: number[][]) {
+  drawChangedCells(changes: Uint16Array[][]) {
     this.graphics.clear()
-  for (let [r, c,s] of changes) {
-    const color = this.colorPalette[this.matrix[r][c]];
-    this.graphics.beginFill(color);
-    this.graphics.drawRect(c * 2, r * 2, 2, 2); // ⚠️ Swapped c/r to match canvas coords
-    this.graphics.endFill();
-  }
+    for(let i = 0;i<changes.length;i++){  
+      let l = changes[i].length;
+      this.graphics.beginFill(this.colorPalette[i]);
+      for(let j = 0;j<changes[i].length;j++){ 
+        let r = changes[i][j][0];
+        let c = changes[i][j][1];
+         this.graphics.drawRect(c * this.pixelSize, r * this.pixelSize, this.pixelSize, this.pixelSize);
+      }
+      this.graphics.endFill();
+
+    }
+  this.currentlyWorking = false;
 }
   ngOnInit(): void {
       this.generateMatrix();
@@ -321,5 +335,15 @@ generateNextState() {
      if(mainContainer){
       this.startApp(mainContainer);
      }
+     this.playing = interval(100).subscribe(()=>{  
+       if(!this.currentlyWorking){
+        this.generateNextState()
+       }
+      })
+  }
+  ngOnDestroy(): void {
+      if(this.playing){ 
+        this.playing.unsubscribe()
+      }
   }
 }
