@@ -32,21 +32,14 @@ function applyRules(r:number,c:number,state:number[][],matrix:Uint8Array[],k1:nu
         state.push([r,c,Math.min(newState,q)])
       }
   }
-  function addingColor(hashMap:Record<string, Uint16Array[]>,state:number,r:number,c:number,colorPalette:Record<number, string>){  
-    let newColor = colorPalette[state];
-    if((newColor in hashMap)){  
-      hashMap[newColor].push(new Uint16Array([r,c]))
-    }else{  
-      hashMap[newColor] =  [new Uint16Array([r,c])];
-    }
-} 
 
-function generateNextState(matrix:Uint8Array[],q:number):Record<string, Uint16Array[]> {
+
+function generateNextState(matrix:Uint8Array[],q:number) {
   let nextState: number[][] = [];
   const colorBuckets:Record<string, Uint16Array[]> = {}
   for (let r = 0; r < matrix.length; r++) {
     for (let c = 0; c < matrix[0].length; c++) {
-      applyRules(r, c, nextState, matrix,2,3,70,q);
+      applyRules(r, c, nextState, matrix,3,3,28,q);
     }
   }
   
@@ -54,11 +47,8 @@ function generateNextState(matrix:Uint8Array[],q:number):Record<string, Uint16Ar
     let r = state[0];
     let c = state[1];
     let newState = state[2];
-    addingColor(colorBuckets,newState,r,c,event.data.colorPalette);
     matrix[r][c] = newState;
   }
-  
-  return colorBuckets;
 }
 postMessage({newState:generateNextState(data.matrix,data.q),newFrame:data.matrix},)
 });
