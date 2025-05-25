@@ -214,16 +214,17 @@ colorPalette: Record<number, string> = {
   197: "#e62e3e",
   198: "#e62e39",
   199: "#e62e33",
+  200: "#e62e33",
 };
 
   matrix: Uint8Array[] = [];
-  rowSize:number = 512;
-  colSize:number = 512;
+  rowSize:number = 528;
+  colSize:number = 528;
    app = new PIXI.Application()
    currentlyWorking = false;
-   playing!:number
+   playing!:Subscription
    pixelSize = 2
-   q  = 99;
+   q  = 200;
    worker!:Worker;
    frames:{newState:Record<string, Uint16Array[]>,newFrame:Uint8Array[],change:number}[] = [];
    ctx!:CanvasRenderingContext2D
@@ -354,20 +355,18 @@ colorPalette: Record<number, string> = {
       this.startApp(mainContainer);
      }
       this.worker.postMessage({matrix:this.matrix,colorPalette:this.colorPalette,q:this.q})
-          const loop = () => {
-          if (!this.currentlyWorking && this.frames.length === 1) {
+        this.playing = interval(20).subscribe(()=>{ 
+           if (!this.currentlyWorking && this.frames.length === 1) {
             let nextFrame = this.frames[0].newFrame;
             this.frames.pop();
             this.matrix = nextFrame;
             this.drawChangedCells();
       }
-     this.playing = requestAnimationFrame(loop);
-    };
-     this.playing = requestAnimationFrame(loop);
+        })
   }
   ngOnDestroy(): void {
       if(this.playing){ 
-        cancelAnimationFrame(this.playing);
+        this.playing.unsubscribe()
       }
       this.worker.terminate();
   }

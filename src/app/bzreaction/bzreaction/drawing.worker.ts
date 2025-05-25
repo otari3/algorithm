@@ -11,15 +11,16 @@ function applyRules(r:number,c:number,state:number[][],matrix:Uint8Array[],k1:nu
       for(let dir of directons){  
         let dr = dir[0];
         let dc = dir[1];
-        if(Math.min(r+dr,c+dc)<0 || r+dr===matrix.length || c+dc===matrix[0].length){ 
-          continue;
-        }
-        if(matrix[r+dr][c+dc]===q){ 
+        const numRows = matrix.length;
+        const numCols = matrix[0].length;
+        const newR = (r + dr + numRows) % numRows;
+        const newC = (c + dc + numCols) % numCols;
+        if(matrix[newR][newC]===q){ 
           ill++;
-        }else if(matrix[r+dr][c+dc]!==0){ 
+        }else if(matrix[newR][newC]!==0){ 
           infected++;
         }
-        s+=matrix[r+dr][c+dc];
+        s+=matrix[newR][newC];
       }
       if(matrix[r][c]===0){ 
         let k1State = Math.floor(infected/k1);
@@ -36,7 +37,7 @@ function generateNextState(matrix:Uint8Array[],q:number){
   let nextState: number[][] = [];
   for (let r = 0; r < matrix.length; r++) {
     for (let c = 0; c < matrix[0].length; c++) {
-      applyRules(r, c, nextState, matrix,2,3,20,q);
+      applyRules(r, c, nextState, matrix,2.5,1,20,q);
     }
   }
   
