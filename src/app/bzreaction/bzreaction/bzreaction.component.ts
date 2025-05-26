@@ -256,6 +256,8 @@ colorPalette: Record<number, string> = {
     if(main){ 
        main.appendChild(this.app.canvas as any);
        this.drawGrid(this.app.stage);
+       console.log("hello world");
+       
     }
   }
   drawGrid(stage: PIXI.Container){ 
